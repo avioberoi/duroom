@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The region map and the readouts that follow it: far in CLIP and in AIMv2, the gap between request and reading, lean baselines and where the lean grows, the free search's lean, the regions the loops climb through, two worked pictures.
+# The region map and the readouts that follow it: far in CLIP and in AIMv2, the gap between request and reading, lean baselines and where the lean grows, the free search's lean, the regions the loops climb through (also for the search scored in CLIP), two worked pictures, the manifold line set on other works.
 # Needs 07_readouts.sh and 09_search_extras.sh (and the steps before them). Outputs go to $DUROOM_OUT/tests12/more.
 set -eo pipefail
 source "$(dirname "$0")/env.sh"
@@ -27,3 +27,7 @@ cd $DUROOM_REPO/search && $DUROOM_PY -B $C/lk_yard_v1.py $M/lk_yard_v1
 cd $DUROOM_REPO/search && $DUROOM_PY -B $C/r5_v4.py $M/r5_v4
 # Far scores and faithful chord of two search pictures (rounds 15 and 7 of qgc_ra_s10 and qgc_ra_s6), printed (observers' readings from the run files, faithful on the exact CLIP reading).
 cd $DUROOM_REPO/search && $DUROOM_PY -B $C/two_pictures_v1.py > $M/two_pictures_v1.txt
+# Path through the 32 regions, far-and-faithful share by region class and score by round of the CLIP-scored search and its random-score loop: r5b_v1.txt (needs the qgcclip_* runs of 04 and 05).
+cd $DUROOM_REPO/search && $DUROOM_PY -B $C/r5b_v1.py $M/r5b_v1
+# The manifold line set on other works (all originals, the 1,512 repaints not used, halves and date parts of today's reference, other cuts) and the on/off and dated labels under each line: r6_v1.txt, .npz (reads onoff_v3_C, onoff_ff_v1 and onoff_dated_v2 of 07).
+cd $DUROOM_REPO/search && $DUROOM_PY -B $C/r6_v1.py $M/r6_v1

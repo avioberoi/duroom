@@ -22,6 +22,7 @@ Can the works a culture has already made tell us where it has not been, when all
 - No search, 6 kinds of request: 6 of 1,270 far and faithful (0.5%).
 - Of the search's 4,380 far and faithful pictures: 92% on the manifold; 88% where art went only after 1900.
 - 5 starts x 3 loops; 60 rounds x 32 pictures per run.
+- The manifold line set on other works, and the labels under each line: [`docs/line-sample.md`](docs/line-sample.md).
 - Rerunning `run/07_readouts.sh` on the thesis's saved runs gives every number above exactly.
 
 ## How to cite
@@ -86,7 +87,7 @@ Two environments; versions pinned as run.
 | `09_search_extras.sh` | free search, restart variants, decoder walk, the remaining readouts (with the search scored in CLIP) |
 | `10_corpus_extras.sh` | the remaining corpus analyses |
 | `11_figures.sh` | figures |
-| `12_more_readouts.sh` | far read in CLIP and AIMv2, the lean of each round, far and faithful by round, the regions the loops pass through |
+| `12_more_readouts.sh` | far read in CLIP and AIMv2, the lean of each round, far and faithful by round, the regions the loops pass through, the manifold line on other works |
 
 - Code: `encode/`, `search/`, `measure/`, `data/`, `figures/`.
 - Not shipped: run outputs; the hand-picked gallery selections and their reading notes (galleries need a reader's own `figures/marks/`).
