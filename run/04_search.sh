@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The main runs: search (qgc_ra), random-score loop (qgc_pin) and no-step loop (qgc_c2) at starts 6 to 10; the same three against today's reference T (qgt_*, starts 11 to 15); the single walk (qgw_walk).
+# The main runs: search (qgc_ra), random-score loop (qgc_pin) and no-step loop (qgc_c2) at starts 6 to 10; the search scored in CLIP and its random-score loop (qgcclip_*); the same three against today's reference T (qgt_*, starts 11 to 15); the single walk (qgw_walk).
 # Needs 03_reference.sh; runs in DUROOM_SEARCH_ENV. Each run writes $O/runs/<tag>_committee_euclidean_min_seedrow/all_candidates.npz (1,921 rows); its stdout and stderr go to $DUROOM_OUT/logs/<tag>.out and .err.
 set -eo pipefail
 source "$(dirname "$0")/env.sh"
@@ -25,6 +25,15 @@ done
 # No-step loop: random scores, step size 1e-5.
 for s in 6 7 8 9 10; do
   bash $C/sphere.sbatch search --mode cma --random-fitness $COMMON --seed $s --tag qgc_c2_s${s} --config $C/config_sphere15_c2.yaml --sigma-path $O/controls/c2_sigma_1e-5.npz --fidelity-max 0.7788 > $B/logs/qgc_c2_s${s}.out 2> $B/logs/qgc_c2_s${s}.err
+done
+
+# Search scored in CLIP: CLIP's min z is the fitness and CLIP's bar admits, the other two observers stay logged: qgcclip_ra_s6 to s10.
+for s in 6 7 8 9 10; do
+  bash $C/sphere.sbatch search --mode cma $COMMON --seed $s --tag qgcclip_ra_s${s} --config $C/config_sphere15.yaml --fidelity-max 0.7788 --score-observers clip-vit-l-14 > $B/logs/qgcclip_ra_s${s}.out 2> $B/logs/qgcclip_ra_s${s}.err
+done
+# Random-score loop of the CLIP-scored search, taking the step sizes logged by the search run of the same start: qgcclip_pin_s6 to s10.
+for s in 6 7 8 9 10; do
+  bash $C/sphere.sbatch search --mode cma --random-fitness $COMMON --seed $s --tag qgcclip_pin_s${s} --config $C/config_sphere15.yaml --sigma-path $O/runs/qgcclip_ra_s${s}_committee_euclidean_min_seedrow/all_candidates.npz --fidelity-max 0.7788 --score-observers clip-vit-l-14 > $B/logs/qgcclip_pin_s${s}.out 2> $B/logs/qgcclip_pin_s${s}.err
 done
 
 # The same three loops against today's reference T (start pool of every date).

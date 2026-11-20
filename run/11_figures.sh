@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Figures of the main text: derive steps (data files in $DUROOM_OUT/figures/data), the figure scripts, then the print versions. Figures go to $DUROOM_OUT/figures.
-# Needs 01 to 10. Needs matplotlib, Pillow, PyMuPDF, pikepdf (figures/requirements-figures.txt). The last block needs files you supply in $DUROOM_OUT/figures/marks (see the module docstrings).
+# Needs 01 to 10. Needs matplotlib, Pillow, PyMuPDF, pikepdf (figures/requirements-figures.txt). The block before the last needs files you supply in $DUROOM_OUT/figures/marks (see the module docstrings); the last block needs 09_search_extras.sh.
 set -eo pipefail
 source "$(dirname "$0")/env.sh"
 F=$DUROOM_REPO/figures; D=$F/derive; B=$DUROOM_OUT
@@ -57,10 +57,18 @@ $DUROOM_PY -B $F/dated_split_v4.py
 $DUROOM_PY -B $F/q10_confirm_v4.py
 # Far and faithful by way of asking: ways_of_asking_vert_v2c and ways_of_asking_ladder_v2.
 $DUROOM_PY -B $F/ways_of_asking_titles_v1.py
+# The same bars with the free search added (vert_v4), and in the order no search, single walk, search, empty slot for the search scored in CLIP, the two controls (vert_v5); the short ladder in that order (ladder_v3).
+$DUROOM_PY -B $F/ways_of_asking_vert_v4.py
+$DUROOM_PY -B $F/ways_of_asking_vert_v5.py
+$DUROOM_PY -B $F/ways_of_asking_ladder_v3.py
+# Smallest gap between any two labels of vert_v4 and vert_v5, printed.
+$DUROOM_PY -B $F/ways_of_asking_label_gaps_v1.py
 
 # ---- print versions (white page)
 # NAME-print.pdf: the paper colour becomes white.
 $DUROOM_PY -B $F/print_variants_v1.py warm manifold_definition_v3 shape_walk_s four_cells_v4 dated_split_v4 q10_confirm_v4 q1_kept_k q1b_path q3_two_pasts_v2 record_decades ways_of_asking_ladder_v2 ways_of_asking_vert_v2c
+# Print versions of the three charts above.
+$DUROOM_PY -B $F/print_variants_v1.py warm ways_of_asking_vert_v4 ways_of_asking_vert_v5 ways_of_asking_ladder_v3
 
 # ---- figures that need supplied files in $DUROOM_OUT/figures/marks
 # Downscaled copies and credit tables of the gallery pictures, from marks/search_finds_v1.csv and marks/search_finds_today_v1.csv.
@@ -74,3 +82,10 @@ $DUROOM_PY -B $F/search_finds_off1900_v5.py
 $DUROOM_PY -B $F/search_genres_v3.py
 # NAME-print4_p1.pdf, _p2.pdf: the tall galleries cut into page parts on the rules between rows.
 $DUROOM_PY -B $F/print_split_v4.py search_finds_main_v2 search_finds_today_v4
+
+# ---- figures with the search scored in CLIP: they read $DUROOM_OUT/tests12/more/r4_readout_v2.txt, written by 09_search_extras.sh
+# The bars of vert_v5 with the search scored in CLIP as the fourth bar (vert_v6, the figure of the main text), and the short ladder with it (ladder_v4).
+$DUROOM_PY -B $F/ways_of_asking_vert_v6.py
+$DUROOM_PY -B $F/ways_of_asking_ladder_v4.py
+# Print versions of the two charts above.
+$DUROOM_PY -B $F/print_variants_v1.py warm ways_of_asking_vert_v6 ways_of_asking_ladder_v4

@@ -55,6 +55,7 @@ def parse_args():
     p.add_argument('--fidelity-max', type=float, default=None)
     p.add_argument('--reanchor', type=int, default=None)  # after each tell, set the mean to the unit mean of the M best feasible renders' CLIP vectors
     p.add_argument('--sigma-path', default=None)  # npz with log_sigma; from round 1, before each ask, sigma is set to the logged value of the previous round, then capped as usual
+    p.add_argument('--score-observers', default=None)  # comma list: the observers whose min z is the told fitness and whose q99 bars admit; default: the committee
     p.add_argument('--noise-seed', type=int, default=None)  # the decoder noise is seeded from this instead of --seed (default: --seed)
     return p.parse_args()
 
@@ -163,7 +164,9 @@ def main(args):
     if args.gate_threshold is not None:
         coh_threshold = args.gate_threshold
 
-    observer_names = cfg['committee']['observers']
+    COMMITTEE = list(cfg['committee']['observers'])  # logged z_agg and passes_q99 stay on the committee
+    SCORE = args.score_observers.split(',') if args.score_observers else list(COMMITTEE)
+    observer_names = COMMITTEE + [n for n in SCORE if n not in COMMITTEE]
     DINO = 'dinov3-l'
     need_null = args.norm_from_push or args.admit_q99 or args.mode == 'mapelites'
     log_all = args.mode != 'cma' or args.log_candidates  # every candidate scored and written (all_draws / all_candidates.npz)
@@ -246,7 +249,7 @@ def main(args):
         generate(content, style, path)
 
     print(f"Style corpus: {len(style_corpus)}, Start: {args.start} (idx={start_idx})")
-    print(f"Observers: {observer_names}, Aggregation: {args.aggregation}")
+    print(f"Observers: {observer_names}, Aggregation: {args.aggregation}, scoring and admitting: {SCORE}")
     print(f"Coherence gate: threshold={coh_threshold}")
     print(f"Flags: {vars(args)}; pushforward rows per observer: {n_push}")
     if args.render_seeded:
@@ -367,6 +370,7 @@ def main(args):
                  angle_bin=np.array([r['angle_bin'] for r in rows]))
         if need_null:
             f['passes_q99'] = np.array([r.get('passes_q99', False) for r in rows])
+            f['passes_q99_score'] = np.array([r.get('passes_q99_score', False) for r in rows])
         return f
 
     def save():
@@ -475,12 +479,13 @@ def main(args):
                         if log_all:  # an infeasible candidate's z exists only on the fixed scale
                             entry[f'z_{name}'] = raw_scores[name] if feasible else (
                                 zfixed(obs, raw) if args.norm_from_push else float('nan'))
-                    nov = float(aggregate(list(raw_scores.values()))) if feasible else 0.0
+                    nov = float(aggregate([raw_scores[n] for n in SCORE])) if feasible else 0.0
                     if log_all:
-                        zs = [entry[f'z_{n}'] for n in observers]
+                        zs = [entry[f'z_{n}'] for n in COMMITTEE]
                         entry['z_agg'] = float(aggregate(zs)) if np.all(np.isfinite(zs)) else float('nan')
                         if need_null:
-                            entry['passes_q99'] = all(entry[f'raw_{n}'] > o['null'][2] for n, o in observers.items())
+                            entry['passes_q99'] = all(entry[f'raw_{n}'] > observers[n]['null'][2] for n in COMMITTEE)
+                            entry['passes_q99_score'] = all(entry[f'raw_{n}'] > observers[n]['null'][2] for n in SCORE)
                 else:
                     nov = 0.0
 
@@ -531,7 +536,7 @@ def main(args):
                             n_inserted += 1
                     continue
                 admit = feasible and it >= args.warmup and (
-                    all(entry[f'raw_{n}'] > o['null'][2] for n, o in observers.items()) if args.admit_q99 else nov > threshold)
+                    all(entry[f'raw_{n}'] > observers[n]['null'][2] for n in SCORE) if args.admit_q99 else nov > threshold)
                 if admit and args.delta is not None and near_archived(entry):
                     n_blocked += 1
                     admit = False

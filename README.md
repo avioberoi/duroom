@@ -78,14 +78,15 @@ Two environments; versions pinned as run.
 | `01_encode.sh` | corpus in CLIP, DINOv3, SigLIP |
 | `02_newaxis.sh` | the direction the corpus moved after 1900 |
 | `03_reference.sh` | pools; repainted reference works; fidelity limit |
-| `04_search.sh` | DuROOM search, its 2 controls, the single walk; runs against today's reference |
+| `04_search.sh` | DuROOM search, its 2 controls, the single walk; runs against today's reference; the search scored in CLIP |
 | `05_readings.sh` | exact readings of every run's pictures |
 | `06_measures_prep.sh` | baselines, bars, lines, leftover basis |
 | `07_readouts.sh` | far and faithful, hits, on/off, dated split, no-search baseline |
 | `08_corpus_analysis.sh` | the corpus chapter (Q1 to Q6) |
-| `09_search_extras.sh` | free search, restart variants, decoder walk, the remaining readouts |
+| `09_search_extras.sh` | free search, restart variants, decoder walk, the remaining readouts (with the search scored in CLIP) |
 | `10_corpus_extras.sh` | the remaining corpus analyses |
 | `11_figures.sh` | figures |
+| `12_more_readouts.sh` | far read in CLIP and AIMv2, the lean of each round, far and faithful by round, the regions the loops pass through |
 
 - Code: `encode/`, `search/`, `measure/`, `data/`, `figures/`.
 - Not shipped: run outputs; the hand-picked gallery selections and their reading notes (galleries need a reader's own `figures/marks/`).

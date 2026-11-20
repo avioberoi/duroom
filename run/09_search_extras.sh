@@ -135,6 +135,9 @@ $DUROOM_PY -B $C/confirm_rounds.py | tail -n 1 > $BD/confirm_rounds.json
 # Off-the-manifold pictures that are also faithful, runs against today's reference: onoff/out/p04_count_strict.out.
 bash $C/p04_count_strict.sh > $OO/p04_count_strict.out
 
+# Counts of the search scored in CLIP and its random-score loop beside the main search and random-score loop (far in both observers and faithful, hits, far in CLIP and faithful, lean): r4_readout_v2.txt (exact readings; needs the qgcclip_* runs of 04 and 05).
+mkdir -p $B/tests12/more && cd $DUROOM_REPO/search && $DUROOM_PY -B $C/r4_readout_v2.py $B/tests12/more/r4_readout_v2
+
 # ---- last: needs the picture lists inputs/pictures_v2.json, pictures_v3.json, and reembed/wikiart_catfm.npz from run/10 (clip_raw); run 10 first
 # Facts per picture of the picture list inputs/pictures_v2.json (and pictures_v3.json): tests12/pf/pf_facts_v1.txt, .json and pf_facts_v2.
 $DUROOM_PY -B $C/pf_facts_v1.py $B/tests12/pf/pf_facts_v1

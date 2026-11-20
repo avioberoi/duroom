@@ -7,8 +7,8 @@ unset LD_LIBRARY_PATH
 B=$DUROOM_OUT; C=$DUROOM_REPO/search; O=$B/sphere
 mkdir -p $O/lists $O/eval
 
-# The main runs (starts 6 to 10): picture list and four-encoder readings.
-for tag in qgc_ra_s{6..10} qgc_pin_s{6..10} qgc_c2_s{6..10}; do
+# The main runs and the CLIP-scored search with its random-score loop (starts 6 to 10): picture list and four-encoder readings.
+for tag in qgc_ra_s{6..10} qgc_pin_s{6..10} qgc_c2_s{6..10} qgcclip_ra_s{6..10} qgcclip_pin_s{6..10}; do
   $DUROOM_PY -c "import numpy as np; z=np.load('$O/runs/${tag}_committee_euclidean_min_seedrow/all_candidates.npz', allow_pickle=True); open('$O/lists/${tag}.txt','w').write('\n'.join(map(str, z['paths']))+'\n')"
   bash $C/sphere.sbatch embed --list $O/lists/${tag}.txt --out $O/eval/${tag}_emb.npz --encoders clip-vit-l-14 dinov3-l siglip-so400m aimv2-huge
 done
