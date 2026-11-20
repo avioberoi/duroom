@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+title: "DuROOM: Discovering Unexplored Regions On and Off the Manifold: Novelty Search in Foundation Model Embedding Spaces"
+type: software
+authors:
+  - family-names: Oberoi
+    given-names: Avi
+    affiliation: University of Chicago
+repository-code: "https://github.com/avioberoi/duroom"
+version: "1.0"
+date-released: "2026-11-19"
+keywords:
+  - novelty search
+  - foundation models
+  - embedding spaces
+  - WikiArt
+  - CMA-ES
