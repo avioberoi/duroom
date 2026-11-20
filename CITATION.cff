@@ -8,8 +8,8 @@ authors:
     affiliation: University of Chicago
 doi: 10.5281/zenodo.24383932
 repository-code: "https://github.com/avioberoi/duroom"
-version: "1.0"
-date-released: "2026-11-19"
+version: "1.1"
+date-released: "2026-11-20"
 keywords:
   - novelty search
   - foundation models
