@@ -1,5 +1,7 @@
 # DuROOM: Discovering Unexplored Regions On and Off the Manifold
 
+[![DOI](https://zenodo.org/badge/1463339542.svg)](https://doi.org/10.5281/zenodo.24383932)
+
 Code for the MA thesis *Discovering Unexplored Regions On and Off the Manifold: Novelty Search in Foundation Model Embedding Spaces* (Avi Oberoi, MA in Computational Social Science, University of Chicago, 2026). Appendix: [`docs/DuROOM-appendix.pdf`](docs/DuROOM-appendix.pdf).
 
 ## Abstract
@@ -35,7 +37,17 @@ Can the works a culture has already made tell us where it has not been, when all
 }
 ```
 
-Software citation: [`CITATION.cff`](CITATION.cff) (GitHub: "Cite this repository").
+```bibtex
+@software{oberoi2026duroomcode,
+  author = {Oberoi, Avi},
+  title  = {DuROOM: Discovering Unexplored Regions On and Off the Manifold: Novelty Search in Foundation Model Embedding Spaces},
+  year   = {2026},
+  doi    = {10.5281/zenodo.24383932},
+  url    = {https://github.com/avioberoi/duroom}
+}
+```
+
+Also: [`CITATION.cff`](CITATION.cff) (GitHub: "Cite this repository").
 
 ## Requirements
 

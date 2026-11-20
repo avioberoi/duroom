@@ -6,6 +6,7 @@ authors:
   - family-names: Oberoi
     given-names: Avi
     affiliation: University of Chicago
+doi: 10.5281/zenodo.24383932
 repository-code: "https://github.com/avioberoi/duroom"
 version: "1.0"
 date-released: "2026-11-19"
