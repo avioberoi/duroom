@@ -1,0 +1,62 @@
+# Sphere search: the space is the unit sphere of raw CLIP ViT-L/14 image embeddings (CLIP is the coordinate only);
+# the generator is SD image variations at the record's median raw length; observers are DINOv3 and SigLIP.
+
+corpus:
+  embeddings: "${DUROOM_EMB}/clip-vit-l-14.npz"
+  embeddings_key: "embeddings"
+  ids_key: "ids"
+  images: "${WIKIART_DIR}/artwork_images"
+  image_pattern: "{id}.jpg"
+  metadata_csv: "${WIKIART_DIR}/artist_data/artwork_data_merged.csv"
+  metadata_id_col: "image_n"
+  metadata_fields: ["Style", "Genre", "Artist_name", "Artwork Name"]
+  name: "WikiArt CLIP ViT-L/14 image embeddings on the unit sphere (768d, 172K works)"
+
+generator:
+  backend: "variations"
+  norm: 17.53          # record median raw CLIP length
+  guidance: 3
+  content_image: "content_photo.png"   # unused by the variations backend; kept for the content-similarity logging path
+
+data:
+  wikiart_style: "${WIKIART_DIR}/artwork_data/artwork_style_embeddings.npz"
+  wikiart_content: "${WIKIART_DIR}/artwork_data/artwork_content_embeddings.npz"
+  wikiart_images: "${WIKIART_DIR}/artwork_images"
+  observer_corpus:
+    clip-vit-l-14: "${DUROOM_EMB}/clip-vit-l-14.npz"
+    dinov3-l: "${DUROOM_EMB}/dinov3-l.npz"
+    siglip-so400m: "${DUROOM_EMB}/siglip-so400m.npz"
+  output_dir: "${DUROOM_OUT}/sphere"
+  run_prefix: "sphere"
+  reference_idx: 29
+
+cma:
+  sigma0: 1.0e-5       # about 0.016 degrees (a near-zero step)
+  popsize: 32
+  mu: null
+  maxiter: 60
+  tolfun: 1e-11
+  tolx: 1e-11
+  early_stop_patience: 20
+  early_stop_min_acceptance: 0.3
+  diagonal: true
+
+novelty:
+  k: 15
+  distance: "euclidean"
+  threshold_percentile: 50
+
+whitening:
+  rank: 64
+  n_clusters: 20
+  reg_factor: 0.01
+
+coherence:
+  threshold: 0.60      # passing --gate-threshold 0 turns the gate off, it is then only logged
+
+committee:
+  aggregation: "min"
+  observers:
+    - "dinov3-l"
+    - "siglip-so400m"
+  held_out: "aimv2-huge"

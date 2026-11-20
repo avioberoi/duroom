@@ -1,0 +1,6 @@
+# Python 3.14.0; pinned versions of the environment the figures were drawn in.
+matplotlib==3.11.1
+numpy==2.4.3
+pillow==12.1.0
+pymupdf==1.26.7
+pikepdf==10.7.2

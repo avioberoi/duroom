@@ -1,0 +1,23 @@
+# Environment of the search loop and the renders (search/sphere.sbatch search, push, pushpool), set as DUROOM_SEARCH_ENV.
+# Python 3.12.13; pinned versions of that environment.
+--extra-index-url https://download.pytorch.org/whl/cu126
+numpy==2.3.5
+scipy==1.17.1
+pandas==2.3.3
+scikit-learn==1.8.0
+pillow==12.0.0
+tqdm==4.67.3
+PyYAML==6.0.3
+torch==2.10.0+cu126
+torchvision==0.25.0+cu126
+diffusers==0.37.0
+transformers==5.3.0
+accelerate==1.13.0
+safetensors==0.7.0
+huggingface_hub==1.7.2
+open_clip_torch==3.3.0
+timm==1.0.25
+cma==4.4.4
+faiss-gpu-cu12==1.14.1.post1
+ftfy==6.3.1
+regex==2026.2.28
