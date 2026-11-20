@@ -26,11 +26,11 @@ KEYS = [  # key, groups of grid_v1 in the order drawn
 COUNTED = {'noise': ['3 noise requests, all kinds']}   # groups the table line of which is not one of the groups above
 
 rows = {}
-for r in csv.DictReader(open(GRID / 'grid_v1_rows.csv', encoding='utf-8')):
+for r in csv.DictReader(open(GRID / 'grid_v1_free_rows.csv', encoding='utf-8')):
     rows.setdefault(r['group'], []).append(r)
 
 counts = {}
-for line in open(GRID / 'grid_v1.txt', encoding='utf-8'):
+for line in open(GRID / 'grid_v1_free.txt', encoding='utf-8'):
     parts = line.rstrip('\n').split('|')
     if len(parts) == 7 and parts[0][:1].isdigit():
         counts[parts[0][:92].strip()] = (int(parts[0][92:]), [int(v) for v in parts[3].split()])

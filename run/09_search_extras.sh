@@ -70,7 +70,7 @@ $DUROOM_PY -B $C/lead_spaced_v1.py $OO/lead_spaced_v1 --run
 
 # ---- oracle lines, undated and artist-era splits, leftover directions
 A=$B/tests12/afterrun/oracle
-# Picture list of the 74 oracle-line pictures in request order: afterrun/oracle/oracle_list_v1.txt.
+# Picture list of the 74 oracle frames (the 71 line pictures and the 3 start pictures) in request order: afterrun/oracle/oracle_list_v1.txt.
 $DUROOM_PY -c "import os, numpy as np; f=[str(x) for x in np.load('$B/tests12/nosearch/nosearch_v5_oracle_requests.npz', allow_pickle=True)['frame_file']]; open('$A/oracle_list_v1.txt','w').write('\n'.join(x if x.startswith('/') else os.path.join('$O/oracle/frames', x) for x in f)+'\n')"
 # Exact readings of the oracle pictures: afterrun/oracle/oracle_emb_h200_v1.npz.
 bash $S/sphere.sbatch embed --list $A/oracle_list_v1.txt --out $A/oracle_emb_h200_v1.npz --encoders $ENC4
@@ -115,12 +115,12 @@ $DUROOM_PY -B $C/agree_p1_v1.py
 $DUROOM_PY -B $C/l1_v1.py > $B/tests12/agree/l1_v1.out
 
 # ---- bound, noise, decoder and baseline checks
-# Reading against request inside a round: gain, cosine, carried, own request nearest: eval/bound/gain.out.
+# Reading against request inside a round, on the main runs: eval/bound/gain.out.
 $DUROOM_PY -B $C/gain.py $O/runs $O/push_emb.npz qgc_ra_s6:N qgc_ra_s7:N qgc_ra_s8:N qgc_ra_s9:N qgc_ra_s10:N qgc_pin_s6:R qgc_pin_s7:R qgc_pin_s8:R qgc_pin_s9:R qgc_pin_s10:R > $BD/gain.out
 # Bands in which later works' offsets lie: eval/bound/band.out.
 $DUROOM_PY -B $C/band.py $DUROOM_REPO/data > $BD/band.out
-# Optimizers on the novelty score in embedding space, no decoder (torch, pycma): eval/bound/optim_walk.out.
-$SEARCH_PY -B $C/optim_walk.py $DUROOM_REPO/data > $BD/optim_walk.out
+# Optimizers on the novelty score in embedding space, no decoder: eval/bound/optim_walk.out.
+$DUROOM_PY -B $C/optim_walk.py $DUROOM_REPO/data > $BD/optim_walk.out
 # Noise images against today's reference: far, covered: eval/bound/noise_covered.out.
 $DUROOM_PY -B $C/noise_covered.py > $BD/noise_covered.out
 # One bar for P against a bar per region, P2 and POS: eval/bound/perregion_v2.out.
@@ -131,7 +131,7 @@ $DUROOM_PY -B $C/sb_grid.py > $BD/sb_grid.out
 $DUROOM_PY -B $S/baselines_score.py $E/sens_read.npz --baselines $O/baselines/prior $O/baselines/chains_h200_qg
 $DUROOM_PY -B $C/baselines_read.py $E/sens_read.npz > $BD/baselines_read.out
 # Per-round far, H, DH and QH counts of the 15 main runs: eval/bound/confirm_rounds.json.
-$DUROOM_PY -B $C/confirm_rounds.py > $BD/confirm_rounds.json
+$DUROOM_PY -B $C/confirm_rounds.py | tail -n 1 > $BD/confirm_rounds.json
 # Off-the-manifold pictures that are also faithful, runs against today's reference: onoff/out/p04_count_strict.out.
 bash $C/p04_count_strict.sh > $OO/p04_count_strict.out
 

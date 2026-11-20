@@ -90,11 +90,11 @@ def validate(arm, n, t, z, obs_ids, lr):
         if got != v:
             bad.append(f'flag {k} basename {got!r}, expected {v!r}')
     sp = fl.get('sigma_path')
-    want_sp = {'W': None, 'V': None, 'C1': f'{O}/runs/qgc_ra_s{n}_committee_euclidean_min_seedrow/all_candidates.npz', 'C2': 'c2_sigma_1e-5.npz'}[arm]
-    if (os.path.basename(str(sp)) if (arm == 'C2' and sp) else sp) != want_sp:
+    want_sp = {'W': None, 'V': None, 'C1': f'qgc_ra_s{n}_committee_euclidean_min_seedrow/all_candidates.npz', 'C2': 'c2_sigma_1e-5.npz'}[arm]
+    if (os.path.basename(str(sp)) if (arm == 'C2' and sp) else '/'.join(str(sp).split('/')[-2:]) if (arm == 'C1' and sp) else sp) != want_sp:    # run folder + file, so moved outputs still match
         bad.append(f'flag sigma_path {sp!r}, expected {want_sp!r}')
     if arm == 'W':
-        if os.path.basename(str(fl.get('walk_theta'))) != THETA_BASE:
+        if re.sub(r'_\d+(?=\.npz$)', '', os.path.basename(str(fl.get('walk_theta')))) != THETA_BASE:    # a job-id suffix in the name is the same file
             bad.append(f'flag walk_theta {fl.get("walk_theta")!r}, expected basename {THETA_BASE}')
         miss = [k for k in WALK_ARRAYS if k not in z.files]
         if miss:

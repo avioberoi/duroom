@@ -29,6 +29,8 @@ for name in S['variations']:
     d10 = get('variations', 'd10')
     two = {d: (get(d, 'd_source') + get(d, 'd_source_seed1')) / 2 for d in S}
     entry = {'n_works': len(rows)}
+    burn = lambda k: [rng.integers(0, len(rows), len(rows)) for _ in range(k * B)]    # noqa: E731  the run also bootstrapped a second decoder: 5 intervals before these, 3 after
+    burn(5)
     for d in S:
         both = np.r_[get(d, 'd_source'), get(d, 'd_source_seed1')]
         entry[d] = {'d_source_median_two_seeds': interval(np.median, two[d]),
@@ -42,6 +44,7 @@ for name in S['variations']:
             common = sorted(set(base) & set(alt))
             diff = np.array([alt[r] - base[r] for r in common])
             entry[d]['alt_minus_base_d_source'] = {**interval(np.median, diff), 'n': len(common), 'wilcoxon_p': float(wilcoxon(diff).pvalue)}
+    burn(3)
     result['lenses'][name] = entry
     print(name, {d: (round(entry[d]['d_source_median_two_seeds']['value'], 3), [round(x, 3) for x in entry[d]['share_nearer_than_own_d10']['ci95']]) for d in S}, flush=True)
 json.dump(result, open(f'{DIR}/compare_n256.json', 'w'), indent=1)

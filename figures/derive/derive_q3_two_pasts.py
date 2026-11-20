@@ -9,7 +9,6 @@ from _artwork_export import card
 OUT = Path(os.environ['DUROOM_OUT'])
 HERE = OUT / 'figures' / 'data'
 HERE.mkdir(parents=True, exist_ok=True)
-IMAGES = Path(os.environ['WIKIART_DIR']) / 'artwork_images'
 COMMON = OUT / 'leftover' / 'clip-vit-l-14_k32_cap0' / 'leftover.json'
 FIRST_DECADE = 1500     # earlier decades hold few works and sit outside the drawn range
 
@@ -40,7 +39,7 @@ WANT = [  # (artist slug, year, title in the source, title as printed, short lab
 works = []
 for artist, year, title, shown, short in WANT:
     r = rows[(artist, year, title)]
-    c = card(r, IMAGES, share=r['share'], share_past=r['share_past'])
+    c = card(r, COMMON.parent / 'thumbs', share=r['share'], share_past=r['share_past'])
     c['title'] = shown
     c['short'] = short
     works.append(c)

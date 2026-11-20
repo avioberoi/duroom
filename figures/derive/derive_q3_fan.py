@@ -11,7 +11,6 @@ from _artwork_export import card
 OUT = Path(os.environ['DUROOM_OUT'])
 HERE = OUT / 'figures' / 'data'
 HERE.mkdir(parents=True, exist_ok=True)
-IMAGES = Path(os.environ['WIKIART_DIR']) / 'artwork_images'
 COMMON = OUT / 'leftover' / 'clip-vit-l-14_k32_cap0' / 'leftover.json'
 RING_SEP = 14.5           # drawn: minimum angular gap between thumbnails on the outer ring, degrees
 RING_LO, RING_HI = 7.5, 85.0
@@ -66,7 +65,7 @@ WANT = [  # (artist slug, year, title, short label)
 works = []
 for artist, year, title, short in WANT:
     r = rows[(artist, year, title)]
-    c = card(r, IMAGES, share=r['share'], share_past=r['share_past'])
+    c = card(r, COMMON.parent / 'thumbs', share=r['share'], share_past=r['share_past'])
     if artist == 'alexander-calder':
         c['title'] = 'Polygons on Triangles'
     with Image.open(HERE.parent / c['asset']) as im:

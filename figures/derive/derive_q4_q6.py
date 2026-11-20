@@ -9,7 +9,6 @@ from _artwork_export import card
 OUT=Path(os.environ['DUROOM_OUT'])
 HERE=OUT/'figures'/'data'
 HERE.mkdir(parents=True,exist_ok=True)
-IMAGES=Path(os.environ['WIKIART_DIR'])/'artwork_images'
 read=lambda p:json.loads(p.read_text(encoding='utf-8'))
 def write(name,data):
     text=json.dumps(data,ensure_ascii=False,indent=1)+'\n'
@@ -34,7 +33,7 @@ for label,slug in ENCODERS:
     examples=[]
     for key,title,score in [('top_d10_not_local','Absolute, not local','d10_all'),('top_local_not_d10','Local, not absolute','local_all'),('top_centre_not_local','Centre, not local','centre')]:
         r=d['cards'][key][0]
-        examples.append(card(r,IMAGES,selection=title,score_key=score,score=r[score],absolute=r['d10_all'],local=r['local_all'],centre=r['centre']))
+        examples.append(card(r,OUT/'distance'/slug/'thumbs',selection=title,score_key=score,score=r[score],absolute=r['d10_all'],local=r['local_all'],centre=r['centre']))
     far.append({'encoder':label,'eras':era_rows,'examples':examples,
         'overlap':[{'pair':name,'share':d['top1pct_overlap'][key]} for name,key in [('Absolute / local','d10_all_local_all'),('Absolute / centre','d10_all_centre'),('Local / centre','local_all_centre')]]})
 write('q5_far',{'encoders':far,'era_labels':['Before 1900','1900–1959','1960 onward'],'k':distance['CLIP']['k'],
