@@ -156,6 +156,7 @@ for cut in CUTS:
               'shift_later': ends(loads['shift'], later), 'shift_past': ends(loads['shift'], past),
               'precursors': {k: {lab: concentration(loads[k], past, v, np.random.default_rng([cut, 99])) for lab, v in (('style', style), ('genre', genre))} for k in ('shift', 'axis1')}}
     P = np.array([x[1:4] for x in cutoff['by_decade_plane'] if x[0] >= cut])    # the post-cutoff decade means in the shift, axis 1, axis 2 coordinates
+    P = P @ np.linalg.inv(np.linalg.qr(np.array([u, W[0], W[1]]).T)[1])    # the same means in an orthonormal basis of that plane: the shift is not orthogonal to the axes
     ev = np.clip(np.linalg.eigvalsh(np.cov((P - P.mean(0)).T))[::-1], 0, None) if len(P) >= 4 else None    # three points always span a plane: uninformative below four
     cutoff['path_variance_shares'] = (ev / ev.sum()).tolist() if ev is not None else None    # all on the first: a straight line; a second share: a bend
     cutoff['n_post_cutoff_decades'] = int(len(P))
